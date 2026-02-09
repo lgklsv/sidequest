@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +32,15 @@ import { generateTree } from "@/server/ai";
 import { useGraphStore } from "@/stores/graph-store";
 
 export const Route = createFileRoute("/")({ component: PromptScreen });
+
+const SUGGESTION_PROMPTS = [
+	"Should I adopt a cat or a dog?",
+	"Should I learn to play the drums?",
+	"Should I move to a new country?",
+	"Should I say yes to karaoke tonight?",
+	"Should I switch careers to become a chef?",
+	"Should I go back to school?",
+];
 
 function PromptScreen() {
 	const [prompt, setPrompt] = useState("");
@@ -105,92 +114,114 @@ function PromptScreen() {
 							rows={3}
 						/>
 
-						<div className="grid grid-cols-2 gap-3">
-							<div className="flex flex-col gap-1.5">
-								<Label className="text-xs text-muted-foreground">Tone</Label>
-								<Select value={tone} onValueChange={(v) => setTone(v as Tone)}>
-									<SelectTrigger className="w-full">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											{TONE_OPTIONS.map((opt) => (
-												<SelectItem key={opt.value} value={opt.value}>
-													{opt.label}
-												</SelectItem>
-											))}
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-							</div>
-
-							<div className="flex flex-col gap-1.5">
-								<Label className="text-xs text-muted-foreground">
-									Timeline
-								</Label>
-								<Select
-									value={timeline}
-									onValueChange={(v) => setTimeline(v as Timeline)}
+						<div className="flex flex-wrap gap-1.5">
+							{SUGGESTION_PROMPTS.map((suggestion) => (
+								<Button
+									key={suggestion}
+									type="button"
+									variant="outline"
+									size="xs"
+									disabled={loading}
+									onClick={() => setPrompt(suggestion)}
+									className="rounded-full text-muted-foreground hover:text-foreground"
 								>
-									<SelectTrigger className="w-full">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											{TIMELINE_OPTIONS.map((opt) => (
-												<SelectItem key={opt.value} value={opt.value}>
-													{opt.label}
-												</SelectItem>
-											))}
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-							</div>
-
-							<div className="flex flex-col gap-1.5">
-								<Label className="text-xs text-muted-foreground">
-									Path Style
-								</Label>
-								<Select
-									value={pathStyle}
-									onValueChange={(v) => setPathStyle(v as PathStyle)}
-								>
-									<SelectTrigger className="w-full">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											{PATH_STYLE_OPTIONS.map((opt) => (
-												<SelectItem key={opt.value} value={opt.value}>
-													{opt.label}
-												</SelectItem>
-											))}
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-							</div>
-
-							<div className="flex flex-col gap-1.5">
-								<Label className="text-xs text-muted-foreground">Depth</Label>
-								<Select
-									value={String(depth)}
-									onValueChange={(v) => setDepth(Number(v))}
-								>
-									<SelectTrigger className="w-full">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											{DEPTH_OPTIONS.map((opt) => (
-												<SelectItem key={opt.value} value={String(opt.value)}>
-													{opt.label}
-												</SelectItem>
-											))}
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-							</div>
+									{suggestion}
+								</Button>
+							))}
 						</div>
+
+						<details className="group">
+							<summary className="flex cursor-pointer list-none items-center gap-1 text-xs text-muted-foreground select-none hover:text-foreground">
+								<ChevronRight className="size-3.5 transition-transform group-open:rotate-90" />
+								Settings
+							</summary>
+							<div className="mt-3 grid grid-cols-2 gap-3">
+								<div className="flex flex-col gap-1.5">
+									<Label className="text-xs text-muted-foreground">Tone</Label>
+									<Select value={tone} onValueChange={(v) => setTone(v as Tone)}>
+										<SelectTrigger className="w-full">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												{TONE_OPTIONS.map((opt) => (
+													<SelectItem key={opt.value} value={opt.value}>
+														{opt.label}
+													</SelectItem>
+												))}
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+								</div>
+
+								<div className="flex flex-col gap-1.5">
+									<Label className="text-xs text-muted-foreground">
+										Timeline
+									</Label>
+									<Select
+										value={timeline}
+										onValueChange={(v) => setTimeline(v as Timeline)}
+									>
+										<SelectTrigger className="w-full">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												{TIMELINE_OPTIONS.map((opt) => (
+													<SelectItem key={opt.value} value={opt.value}>
+														{opt.label}
+													</SelectItem>
+												))}
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+								</div>
+
+								<div className="flex flex-col gap-1.5">
+									<Label className="text-xs text-muted-foreground">
+										Path Style
+									</Label>
+									<Select
+										value={pathStyle}
+										onValueChange={(v) => setPathStyle(v as PathStyle)}
+									>
+										<SelectTrigger className="w-full">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												{PATH_STYLE_OPTIONS.map((opt) => (
+													<SelectItem key={opt.value} value={opt.value}>
+														{opt.label}
+													</SelectItem>
+												))}
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+								</div>
+
+								<div className="flex flex-col gap-1.5">
+									<Label className="text-xs text-muted-foreground">Depth</Label>
+									<Select
+										value={String(depth)}
+										onValueChange={(v) => setDepth(Number(v))}
+									>
+										<SelectTrigger className="w-full">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												{DEPTH_OPTIONS.map((opt) => (
+													<SelectItem key={opt.value} value={String(opt.value)}>
+														{opt.label}
+													</SelectItem>
+												))}
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+								</div>
+							</div>
+						</details>
 
 						<Button
 							type="submit"
