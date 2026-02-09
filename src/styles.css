@@ -127,3 +127,31 @@
     @apply font-sans;
     }
 }
+
+/* React Flow control panel overrides */
+.react-flow__controls {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border);
+  fill: var(--foreground);
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--accent);
+}
+
+.react-flow__edge-path {
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.react-flow__handle {
+  width: 6px;
+  height: 6px;
+}
